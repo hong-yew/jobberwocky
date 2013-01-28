@@ -1,7 +1,6 @@
 h1. Jobberwocky
 
-Jobberwocky is a module to execute a Play! "Job":http://www.playframework.org/documentation/1.2.5/jobs from command line outside of the Play's web application container. 
-This allows you to reuse all your application logic and models from command line program.
+Jobberwocky is a module to execute a Play! "Job":http://www.playframework.org/documentation/1.2.5/jobs from command line outside of the Play's web application container. This allows you to reuse all your application logic and models from command line program.
 
 Job executed by Jobberwocky will support Play "JPA":http://www.playframework.org/documentation/1.2.5/jpa models and transaction "annotations":http://www.playframework.org/documentation/1.2.5/jpa#transactions. 
 
@@ -34,7 +33,7 @@ bc.. public static void main(String[] args) {
 
 p(note). You must supply your Play application path with @-Dapplication.path@ and the Play framework path with @-Dplay.path@ in the VM argument. Alternatively, they can be supplied into the @PlayContext@ constructor. You may also supply the framework id using the standard @-Dplay.id@ VM argument.
 
-Your command line application classpath must include the all the dependent libraries used by Play Framework, 3rd party libraries from your application, your modules, your application own classes and the @/conf@ directory. Your application classes are located in @/tmp/classes@ for DEV mode and @/precompiled/classes@ for PROD mode. If you are unsure, have a look at the classpath by generating a run script using one of @jobberwocky:posixscript@ or @jobberwocky:windowscript@.
+Your command line application classpath must include the all the dependent libraries used by Play Framework, 3rd party libraries from your application, your modules, your application own classes and the @/conf@ directory. Your application classes are located in @/tmp/classes@ for DEV mode and @/precompiled/java@ for PROD mode. If you are unsure, have a look at the classpath by generating a run script using one of @jobberwocky:posixscript@ or @jobberwocky:windowscript@.
 
 h2. Commands
 
