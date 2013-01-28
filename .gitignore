@@ -1,6 +1,19 @@
 *.class
-
-# Package Files #
 *.jar
 *.war
 *.ear
+*.log
+*.bak
+.DS_Store
+.classpath
+.project
+.settings/
+eclipse/
+dist/
+lib/
+logs/
+precompiled/
+test-result/
+tmp/o
+bin/
+
