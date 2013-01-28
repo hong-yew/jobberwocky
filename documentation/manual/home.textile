@@ -1,0 +1,76 @@
+h1. Jobberwocky
+
+Jobberwocky is a module to execute a Play! "Job":http://www.playframework.org/documentation/1.2.5/jobs from command line outside of the Play's web application container. 
+This allows you to reuse all your application logic and models from command line program.
+
+Job executed by Jobberwocky will support Play "JPA":http://www.playframework.org/documentation/1.2.5/jpa models and transaction "annotations":http://www.playframework.org/documentation/1.2.5/jpa#transactions. 
+
+Jobberwocky will support both PROD (precompiled) mode and DEV modes.
+
+The Job must have a default constructor and/or a constructor with a single "Map":http://docs.oracle.com/javase/6/docs/api/java/util/Map.html argument. The Map constructor will allow command line arguments to be passed into the Job on execution. 
+
+h2. Usage
+
+There are 3 ways to use the Jobberwocky module to run a job from command line.
+
+h3. The Play Command Extension
+
+Run a job directly using the @play jobberwocky:runjob@ command. See the Commands topic below.
+
+h3. Generate an Execution Script
+
+Use Jobberwocky to generate a POSIX/Unix shell script or Windows batch file to run a job with the command @play jobberwocky:posixscript@ or @play jobberwocky:windowscript@. The scripts are specific to the current environment pathnames wise. You may modify the script for other environments or make other customizations.
+
+h3. Write Your Own
+
+Use the Jobberwocky library to invoke a Job from your own command-line application. For example:
+
+bc.. public static void main(String[] args) {
+    PlayContext context = new PlayContext();
+    context.runJob(MyJob.class); 
+    Play.stop();
+    System.exit();
+}
+
+p(note). You must supply your Play application path with @-Dapplication.path@ and the Play framework path with @-Dplay.path@ in the VM argument. Alternatively, they can be supplied into the @PlayContext@ constructor. You may also supply the framework id using the standard @-Dplay.id@ VM argument.
+
+Your command line application classpath must include the all the dependent libraries used by Play Framework, 3rd party libraries from your application, your modules, your application own classes and the @/conf@ directory. Your application classes are located in @/tmp/classes@ for DEV mode and @/precompiled/classes@ for PROD mode. If you are unsure, have a look at the classpath by generating a run script using one of @jobberwocky:posixscript@ or @jobberwocky:windowscript@.
+
+h2. Commands
+
+h3. runjob
+
+Run a job directly from the Play Command:
+
+bc. play jobberwocky:runjob [application] [job] {options}
+
+* application - Play application name
+* job         - Job class name in the application
+* options     - _optional_. Arguments to pass into the Job. The Job must have a constructor with a single "Map":http://docs.oracle.com/javase/6/docs/api/java/util/Map.html argument. The argument may also include the Play framework id.
+
+For example:
+
+bc. play jobberwocky:runjob myapp com.mycompany.MyJob --%prod 
+
+h3. posixscript
+
+Generate a POSIX/Unix shell script to run a job
+
+bc. play jobberwocky:posixscript [application] [job] {--%framework.id}
+
+The command will generate the script file to your application @/bin@ directory.
+
+For example:
+
+bc. play jobberwocky:posixscript myapp com.mycompany.MyJob --%prod 
+
+will generate a script file from your application path: @/bin/MyJob.sh@.
+
+h3. windowscript
+
+Generate a Windows batch file to run a job
+
+bc. play jobberwocky:windowscript [application] [job] {--%framework.id}
+
+The command will generate the script file to your application @/bin@ directory.
+
