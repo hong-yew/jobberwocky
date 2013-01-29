@@ -3,4 +3,4 @@ jobberwocky
 
 A utility to run Play! Framework job outside of the web container.
 
-See [documentation/manual/home.textile](documentation/manual/home.textile) for details.
+See [jobberwocky/documentation/manual/home.textile](jobberwocky/documentation/manual/home.textile) for details.
