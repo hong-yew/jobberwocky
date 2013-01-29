@@ -6,7 +6,7 @@ Job executed by Jobberwocky will support Play "JPA":http://www.playframework.org
 
 Jobberwocky will support both PROD (precompiled) mode and DEV modes.
 
-The Job must have a default constructor and/or a constructor with a single "Map":http://docs.oracle.com/javase/6/docs/api/java/util/Map.html argument. The Map constructor will allow command line arguments to be passed into the Job on execution. 
+The Job must have a default constructor and/or a constructor with a single "Map":http://docs.oracle.com/javase/6/docs/api/java/util/Map.html argument. A Job with a Map constructor can receive command line arguments. 
 
 h2. Usage
 
@@ -16,24 +16,27 @@ h3. The Play Command Extension
 
 Run a job directly using the @play jobberwocky:runjob@ command. See the Commands topic below.
 
-h3. Generate an Execution Script
+h3. Generate an Executable Script
 
-Use Jobberwocky to generate a POSIX/Unix shell script or Windows batch file to run a job with the command @play jobberwocky:posixscript@ or @play jobberwocky:windowscript@. The scripts are specific to the current environment pathnames wise. You may modify the script for other environments or make other customizations.
+Use @play jobberwocky:posixscript@ or @play jobberwocky:windowscript@ to generate a POSIX/Unix shell script or Windows batch file to run a job. The scripts are specific to the current environment pathnames. You may modify the script for other environments or make other customizations.
 
 h3. Write Your Own
 
 Use the Jobberwocky library to invoke a Job from your own command-line application. For example:
 
 bc.. public static void main(String[] args) {
-    PlayContext context = new PlayContext();
-    context.runJob(MyJob.class); 
+    try {
+      PlayContext context = new PlayContext();
+      context.runJob(MyJob.class); 
+    }
+    catch(Exception e) {...}
     Play.stop();
     System.exit();
 }
 
 p(note). You must supply your Play application path with @-Dapplication.path@ and the Play framework path with @-Dplay.path@ in the VM argument. Alternatively, they can be supplied into the @PlayContext@ constructor. You may also supply the framework id using the standard @-Dplay.id@ VM argument.
 
-Your command line application classpath must include the all the dependent libraries used by Play Framework, 3rd party libraries from your application, your modules, your application own classes and the @/conf@ directory. Your application classes are located in @/tmp/classes@ for DEV mode and @/precompiled/java@ for PROD mode. If you are unsure, have a look at the classpath by generating a run script using one of @jobberwocky:posixscript@ or @jobberwocky:windowscript@.
+Your command line application classpath must include the @play-jobberwocky.jar@ and all the dependent libraries used by Play Framework, 3rd party libraries from your application, your modules, your application own classes and the @/conf@ directory. Your application classes are located in @/tmp/classes@ in DEV mode and @/precompiled/java@ in PROD mode. If you are unsure, have a look at the classpath by generating a run script using one of @jobberwocky:posixscript@ or @jobberwocky:windowscript@.
 
 h2. Commands
 
@@ -55,9 +58,13 @@ h3. posixscript
 
 Generate a POSIX/Unix shell script to run a job
 
-bc. play jobberwocky:posixscript [application] [job] {--%framework.id}
+bc. play jobberwocky:posixscript [application] [job] {--%playid}
 
-The command will generate the script file to your application @/bin@ directory.
+* application  - Play application name
+* job          - Job class name in the application
+* playid       - _optional_. Play framework id using the --% option.
+
+The command will generate a script file to your application @/bin@ directory.
 
 For example:
 
@@ -67,9 +74,13 @@ will generate a script file from your application path: @/bin/MyJob.sh@.
 
 h3. windowscript
 
-Generate a Windows batch file to run a job
+Generate a Windows batch file to run a job.
 
-bc. play jobberwocky:windowscript [application] [job] {--%framework.id}
+bc. play jobberwocky:windowscript [application] [job] {--%playid}
 
-The command will generate the script file to your application @/bin@ directory.
+* application  - Play application name
+* job          - Job class name in the application
+* playid       - _optional_. Play framework id using the --% option.
+
+The command will generate a batch file to your application @/bin@ directory.
 
