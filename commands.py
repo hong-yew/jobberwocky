@@ -63,7 +63,7 @@ def runjob(app, env, args):
             
 def classpath(app, env, args):
     separator = class_separator();
-    jobberwockymodule = os.path.realpath([module for module in app.modules() if module.endswith('jobberwocky')][0])
+    jobberwockymodule = os.path.realpath([module for module in app.modules() if module.find('jobberwocky') > -1][0])
     cp_args = app.cp_args() + separator + os.path.normpath(os.path.join(app.path,'tmp', 'classes')) + separator + os.path.normpath(os.path.join(app.path,'precompiled', 'java')) + separator + os.path.join(jobberwockymodule,"lib","play-jobberwocky.jar")
     return cp_args
     
