@@ -32,19 +32,24 @@ public class RunJob  {
 		if (args.length == 0) {
 			System.err.println("Requires Job class name");
 			usage();
-			System.exit(-1);
+			System.exit(1);
 		}
 		
 		int    exitCondition = 0;
 		String jobName = args[0];
 		try {	
 			PlayContext context = new PlayContext();
-			context.runJob(jobName, getJobArguments(args)); 
-			Logger.info("Job %s has finished normally", jobName);
+			Object returnResult = context.runJob(jobName, getJobArguments(args)); 
+			Logger.info("Job %s has finished normally. Returns result: %s", jobName, returnResult);
+			
+			// Set the exit condition if the returnResult is a number
+			if (returnResult instanceof Number) {
+				exitCondition = ((Number) returnResult).intValue();
+			}
 		}
 		catch(Exception e) {
 			Logger.error(e, "Error in running Job %s. The job application will stop", jobName);	
-			exitCondition = -1;
+			exitCondition = 1;
 		}
 		finally {
 			Play.stop();

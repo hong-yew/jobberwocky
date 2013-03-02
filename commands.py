@@ -52,10 +52,11 @@ def runjob(app, env, args):
     cp = classpath(app, env, args)
     java_cmd = app.java_cmd(["-Dplay.path=" + env["basedir"] ], cp, "play.modules.jobberwocky.RunJob", args)
     try:
-        subprocess.call(java_cmd, env=os.environ)
+        rtn = subprocess.call(java_cmd, env=os.environ)
+        sys.exit(rtn)
     except OSError:
         print "Could not execute the java executable, please make sure the JAVA_HOME environment variable is set properly (the java executable should reside at JAVA_HOME/bin/java). "
-        sys.exit(-1)
+        sys.exit(1)
             
 #################################################################################################################
 # Generate Java classpath, including the jobberwockymodule jar

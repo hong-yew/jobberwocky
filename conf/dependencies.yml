@@ -1,4 +1,4 @@
-self: jobberwocky -> jobberwocky 0.2
+self: jobberwocky -> jobberwocky 0.4
 
 require:
     - play

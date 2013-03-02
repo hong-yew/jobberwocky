@@ -42,8 +42,7 @@ public class PlayContext {
 		oldClassLoader = Thread.currentThread().getContextClassLoader();
 		
 	    Play.standalonePlayServer = true;
-	    Play.usePrecompiled = false;
-	   
+	 
 	    // Setup Play Application path
 	    if (applicationPath == null) {
 	    	System.out.println("Application path is not set. Set using -Dapplication.path JVM argument");
@@ -68,6 +67,13 @@ public class PlayContext {
         	throw new RuntimeException("Invalid Play framework path: " + Play.frameworkPath.getAbsolutePath());
         }
         
+        // Accept precompiled mode
+	    File precompiled = new File(applicationPath, "precompiled");
+        if (precompiled.exists()) {
+        	System.out.println("Using precompiled code: " + precompiled.getAbsolutePath() + " code exists.");
+        	Play.usePrecompiled = true;
+        }
+	    
         // Initialise Play
         Play.init(root, playid);
         try {
@@ -88,9 +94,9 @@ public class PlayContext {
 	 * @param jobName
 	 * @throws Exception
 	 */
-	public void runJob(String jobName) throws Exception {
+	public Object runJob(String jobName) throws Exception {
 		Class jobClass = Play.classloader.loadClass( jobName );
-		runJob(jobClass, null);	
+		return runJob(jobClass, null);	
 	}	
 	
 	/**
@@ -98,9 +104,9 @@ public class PlayContext {
 	 * @param jobName
 	 * @throws Exception
 	 */
-	public void runJob(String jobName, Map<String,String> params) throws Exception {
+	public Object runJob(String jobName, Map<String,String> params) throws Exception {
 		Class jobClass = Play.classloader.loadClass( jobName );
-		runJob(jobClass, params);	
+		return runJob(jobClass, params);	
 	}		
 	
 	/**
@@ -108,7 +114,7 @@ public class PlayContext {
 	 * @param jobClass
 	 * @throws Exception
 	 */
-	public void runJob(Class jobClass, Map<String,String> params) throws Exception {
+	public Object runJob(Class jobClass, Map<String,String> params) throws Exception {
 		Thread.currentThread().setContextClassLoader(Play.classloader);
 		Job job = null;
 		if (params != null) {
@@ -127,8 +133,9 @@ public class PlayContext {
 			Logger.debug("Executing job %s", jobClass.getName());
 			job = (Job) jobClass.newInstance();
 		}
-		job.now().get();		
+		Object returnResult = job.now().get();		
 		Thread.currentThread().setContextClassLoader(oldClassLoader);
+		return returnResult;
 	}
 	
 	/**

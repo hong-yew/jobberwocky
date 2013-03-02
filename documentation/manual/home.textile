@@ -84,3 +84,12 @@ bc. play jobberwocky:windowscript [application] [job] {--%playid}
 
 The command will generate a batch file to your application @/bin@ directory.
 
+h2. Misc.
+
+h3. Precompilation
+
+If the application has been precompiled and the @/precompiled@ folder exists, all the Jobs will run with precompiled code.
+
+h3. Return Value
+
+If the Job returns a @Number@ as a return value, the number will be the application return value.
